@@ -1,26 +1,26 @@
-const int sensor1 = 2;
-const int sensor2 = 3;
-const int sensor3= 4;
-const int sensor4 = 5;
-const int sensor5 = 6;
-const int sensor6 = 7;
-const int sensor7 = 8;
-const int sensor8 = 9;
-const int sensor9 = 10;
+const int sensor1 = 2;  // define o pino do sensor
+const int sensor2 = 3;  // define o pino do sensor
+const int sensor3 = 4;  // define o pino do sensor
+const int sensor4 = 5;  // define o pino do sensor
+const int sensor5 = 6;  // define o pino do sensor
+const int sensor6 = 7;  // define o pino do sensor
+const int sensor7 = 8;  // define o pino do sensor
+const int sensor8 = 9;  // define o pino do sensor
+const int sensor9 = 10; // define o pino do sensor
 
-const int tempo = 10;
+const int tempo = 10; // tempo de fluxo ( não utilizado)
 
-const int led = 11;
+const int led = 11; // define o pino do led
 
-boolean estadoSensor1;
-boolean estadoSensor2;
-boolean estadoSensor3;
-boolean estadoSensor4;
-boolean estadoSensor5;
-boolean estadoSensor6;
-boolean estadoSensor7;
-boolean estadoSensor8;
-boolean estadoSensor9;
+boolean estadoSensor1;  //recebe leitura do pino do sensor
+boolean estadoSensor2;  //recebe leitura do pino do sensor
+boolean estadoSensor3;  //recebe leitura do pino do sensor
+boolean estadoSensor4;  //recebe leitura do pino do sensor
+boolean estadoSensor5;  //recebe leitura do pino do sensor
+boolean estadoSensor6;  //recebe leitura do pino do sensor
+boolean estadoSensor7;  //recebe leitura do pino do sensor
+boolean estadoSensor8;  //recebe leitura do pino do sensor
+boolean estadoSensor9;  //recebe leitura do pino do sensor
 
 double millisIniciaProcesso = millis();
 
@@ -78,7 +78,8 @@ boolean acionamentoSensor9 = false;
 
 double tempoplacaligada = millis();
 void setup() {
-
+  tempoplacaligada = millis();
+  
   pinMode(led, OUTPUT);
   
   pinMode(sensor1, INPUT_PULLUP);
@@ -93,6 +94,7 @@ void setup() {
 
   Serial.begin(9600);// Inicia a comunicação serial 
   
+  
   }
 
 void loop() {
@@ -101,7 +103,7 @@ void loop() {
   estadoSensor9 = digitalRead(sensor9);
   if (estadoSensor9 == 0 && verificaProcesso == true){
 
-    tempoplacaligada = millis();
+    
     
     if(zeraTempoInicioProcesso == true){
      millisIniciaProcesso = millis();
@@ -109,6 +111,7 @@ void loop() {
     }
     
     if((millis() - millisIniciaProcesso) > 3000){
+      Serial.println("Iniciando sistema de leitura.");
       inicioProcesso = true;
 
       digitalWrite(led, HIGH); 
@@ -118,11 +121,14 @@ void loop() {
       digitalWrite(led, HIGH); 
       delay(1000);
       digitalWrite(led, LOW); 
- 
-      verificaProcesso = false;
 
+      Serial.println("Sistema de leitura iniciado com sucesso!");
+      verificaProcesso = false;
+      
+    } 
+  } else{
+      millisIniciaProcesso = millis();
     }
-  }
 
   if(inicioProcesso == true){
     if (controleSensor1 == true){
@@ -277,19 +283,36 @@ void loop() {
     }
     if(liberaCalculos == true){
 
-  millisTempoSensor1 = millisTempoSensor1 - ( millisTempoSensor1 - tempoplacaligada);
-  millisTempoSensor2 = millisTempoSensor2 - millisTempoSensor1;
-  millisTempoSensor3 = millisTempoSensor3 - millisTempoSensor1;
-  millisTempoSensor4 = millisTempoSensor4 - millisTempoSensor1;
-  millisTempoSensor5 = millisTempoSensor5 - millisTempoSensor1;
-  millisTempoSensor6 = millisTempoSensor6 - millisTempoSensor1;
-  millisTempoSensor7 = millisTempoSensor7 - millisTempoSensor1;
-  millisTempoSensor8 = millisTempoSensor8 - millisTempoSensor1;
-  millisTempoSensor9 = millisTempoSensor9 - millisTempoSensor1;
-
-      Serial.print("tempo no millisIniciaProcesso é de:");
+      Serial.print("debugger: tempo no millisIniciaProcesso é de:");
       Serial.print(millisIniciaProcesso);
       Serial.println(" milisegundos");
+
+      
+      Serial.print("debugger: tempo no tempoplacaligada é de:");
+      Serial.print(tempoplacaligada);
+      Serial.println(" milisegundos");
+
+      Serial.print("debugger: tempo no sensor 1 é de:");
+      Serial.print(millisTempoSensor1);
+      Serial.println(" milisegundos");
+
+
+  double diferencaTempoPlaca = millisTempoSensor1 - tempoplacaligada;
+
+      Serial.print("debugger: tempo no diferencaTempoPlaca é de:");
+      Serial.print(diferencaTempoPlaca);
+      Serial.println(" milisegundos");
+  
+  millisTempoSensor1 = millisTempoSensor1 - diferencaTempoPlaca;
+  millisTempoSensor2 = millisTempoSensor2 - diferencaTempoPlaca;
+  millisTempoSensor3 = millisTempoSensor3 - diferencaTempoPlaca;
+  millisTempoSensor4 = millisTempoSensor4 - diferencaTempoPlaca;
+  millisTempoSensor5 = millisTempoSensor5 - diferencaTempoPlaca;
+  millisTempoSensor6 = millisTempoSensor6 - diferencaTempoPlaca;
+  millisTempoSensor7 = millisTempoSensor7 - diferencaTempoPlaca;
+  millisTempoSensor8 = millisTempoSensor8 - diferencaTempoPlaca;
+  millisTempoSensor9 = millisTempoSensor9 - diferencaTempoPlaca;
+
       
       Serial.print("tempo no sensor 1 é de:");
       Serial.print(millisTempoSensor1);
@@ -376,7 +399,7 @@ void loop() {
       Serial.println(" segundos");
       
       Serial.println("-----------------");
-  double velocidadeMediaSensor1 = (distanciaSensor1 - 0)/(tempoSensor1_ms - 0);
+  double velocidadeMediaSensor1 = 0;
       Serial.print("velocidade no sensor 1 é de:");
       Serial.print(velocidadeMediaSensor1);
       Serial.println(" metros por segundos");
@@ -424,7 +447,7 @@ void loop() {
       
 
       Serial.println("-----------------");
-  double aceleracaoMediaSensor1 = (velocidadeMediaSensor1 - 0)/(tempoSensor1_ms - 0);
+  double aceleracaoMediaSensor1 = 0;
       Serial.print("Aceleração no sensor 1 é de:");
       Serial.print(aceleracaoMediaSensor1);
       Serial.println(" metros por segundos²");
