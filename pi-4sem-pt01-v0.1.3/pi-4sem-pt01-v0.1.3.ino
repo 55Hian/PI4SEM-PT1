@@ -4,17 +4,17 @@
 WiFiClientSecure client;
 String textFix = "GET /forms/d/e/1FAIpQLSdg3z6ex3eqmtq50QU3exj6IZ96m6zCcOUUZiX2aO1Va6UClw/formResponse?ifq&entry.353115888="; //link formulario ( envio de dados para planilha )
 
-const int sensor1 = 2;  // define o pino do sensor
-const int sensor2 = 3;  // define o pino do sensor
-const int sensor3 = 4;  // define o pino do sensor
-const int sensor4 = 5;  // define o pino do sensor
-const int sensor5 = 6;  // define o pino do sensor
-const int sensor6 = 7;  // define o pino do sensor
-const int sensor7 = 8;  // define o pino do sensor
-const int sensor8 = 9;  // define o pino do sensor
-const int sensor9 = 10; // define o pino do sensor
+const int sensor1 = 13;  // define o pino do sensor (pino sem pull up interno)
+const int sensor2 = 14;  // define o pino do sensor
+const int sensor3 = 16;  // define o pino do sensor
+const int sensor4 = 17;  // define o pino do sensor
+const int sensor5 = 18;  // define o pino do sensor
+const int sensor6 = 19;  // define o pino do sensor
+const int sensor7 = 21;  // define o pino do sensor
+const int sensor8 = 22;  // define o pino do sensor
+const int sensor9 = 23; // define o pino do sensor
 
-const int led = 11; // define o pino do led
+const int led = 25  ; // define o pino do led
 
 const int tempo = 10; // tempo de fluxo ( não utilizado)
 
@@ -55,6 +55,8 @@ boolean acionamentoSensor6 = false; //Limitador do tipo cascata do processo de l
 boolean acionamentoSensor7 = false; //Limitador do tipo cascata do processo de leitura dos sensores
 boolean acionamentoSensor8 = false; //Limitador do tipo cascata do processo de leitura dos sensores
 boolean acionamentoSensor9 = false; //Limitador do tipo cascata do processo de leitura dos sensores
+
+boolean acionaEnvioDeDados = false; //Aciona o envio dos dados
 
 double millisIniciaProcesso = millis(); //Inicia função millis para comparador de processo
 double tempoplacaligada = millis(); //Inicia função de tempo para verificação de logica
@@ -110,18 +112,20 @@ double aceleracaoMediaSensor8;
 double aceleracaoMediaSensor9;
 
 void setup() {
-
+  Serial.begin(115200); // Inicia comunicação serial
+  tempoplacaligada = millis(); // armazena tempo de placa ao iniciar o processo
+  
   Serial.println("Projeto:          PI-4SEM-PT01");
   Serial.println("Versão:           0.1.3");
   Serial.println("Data:             20/09/2023");
   Serial.println("Autor:            Hian A. Damaceno");
   Serial.println("Copyright notice: Código de sensoriamento de pista e envio de dados para nuvem.");
-
+  Serial.println(" ");
   Serial.println("Iniciando parametrização do sistema");
+  Serial.println(" ");
+ 
 
-  tempoplacaligada = millis(); // armazena tempo de placa ao iniciar o processo
-
-  pinMode(sensor1, INPUT_PULLUP); //Define os pinos de sensores como entradas de sinal digital
+  pinMode(sensor1, INPUT); //Define os pinos de sensores como entradas de sinal digital
   pinMode(sensor2, INPUT_PULLUP); //Define os pinos de sensores como entradas de sinal digital
   pinMode(sensor3, INPUT_PULLUP); //Define os pinos de sensores como entradas de sinal digital
   pinMode(sensor4, INPUT_PULLUP); //Define os pinos de sensores como entradas de sinal digital
@@ -133,15 +137,16 @@ void setup() {
 
   pinMode(led, OUTPUT); //Degine pino de indicador visual como saida
 
-  Serial.begin(115200); // Inicia comunicação serial
-
   WiFi.mode(WIFI_STA);//Habilita o modo estaçao
-  WiFi.begin("usuarioWifi", "senhaWifi");//Conecta na rede
+  WiFi.begin("CACHORRO", "hi12345678");//Conecta na rede
+  Serial.println("Conectando a rede Wifi");
+  Serial.println(" ");
 
   delay(2000);//Espera um tempo para se conectar no WiFi
 
   client.setInsecure(); // define a conexão do cliente como segura.
-
+  Serial.println("Parametrização do sistema concluida");
+  Serial.println(" ");
 }
 
 void loop() {
@@ -565,104 +570,109 @@ void loop() {
       Serial.println(" metros por segundos²");
 
       liberaCalculos = false;
+      acionaEnvioDeDados = true;
 
     }
   }
+  if(acionaEnvioDeDados == true){
+    if (client.connect("docs.google.com", 443) == 1)//Tenta se conectar ao servidor do Google docs na porta 443 (HTTPS)
+    {
+      String toSend = textFix;//Atribuimos a String auxiliar na nova String que sera enviada
+      toSend +=   acionamentoSensor1;
+      toSend +=   ",";
+      toSend +=   acionamentoSensor2;
+      toSend +=   ",";
+      toSend +=   acionamentoSensor3;
+      toSend +=   ",";
+      toSend +=   acionamentoSensor4;
+      toSend +=   ",";
+      toSend +=   acionamentoSensor5;
+      toSend +=   ",";
+      toSend +=   acionamentoSensor6;
+      toSend +=   ",";
+      toSend +=   acionamentoSensor7;
+      toSend +=   ",";
+      toSend +=   acionamentoSensor8;
+      toSend +=   ",";
+      toSend +=   acionamentoSensor9;
+      toSend +=   ",";
+      //toSend +=   acionamentoSensor10;
+      //toSend +=   ",";
+      toSend +=   tempoSensor1_ms;
+      toSend +=   ",";
+      toSend +=   tempoSensor2_ms;
+      toSend +=   ",";
+      toSend +=   tempoSensor3_ms;
+      toSend +=   ",";
+      toSend +=   tempoSensor4_ms;
+      toSend +=   ",";
+      toSend +=   tempoSensor5_ms;
+      toSend +=   ",";
+      toSend +=   tempoSensor6_ms;
+      toSend +=   ",";
+      toSend +=   tempoSensor7_ms;
+      toSend +=   ",";
+      toSend +=   tempoSensor8_ms;
+      toSend +=   ",";
+      toSend +=   tempoSensor9_ms;
+      toSend +=   ",";
+      //toSend +=   tempoSensor10_ms;
+      //toSend +=   ",";
+      toSend +=   velocidadeMediaSensor1;
+      toSend +=   ",";
+      toSend +=   velocidadeMediaSensor2;
+      toSend +=   ",";
+      toSend +=   velocidadeMediaSensor3;
+      toSend +=   ",";
+      toSend +=   velocidadeMediaSensor4;
+      toSend +=   ",";
+      toSend +=   velocidadeMediaSensor5;
+      toSend +=   ",";
+      toSend +=   velocidadeMediaSensor6;
+      toSend +=   ",";
+      toSend +=   velocidadeMediaSensor7;
+      toSend +=   ",";
+      toSend +=   velocidadeMediaSensor8;
+      toSend +=   ",";
+      toSend +=   velocidadeMediaSensor9;
+      toSend +=   ",";
+      //toSend +=   velocidadeMediaSensor1;
+      //toSend +=   ",";
+      toSend +=   aceleracaoMediaSensor1;
+      toSend +=   ",";
+      toSend +=   aceleracaoMediaSensor2;
+      toSend +=   ",";    
+      toSend +=   aceleracaoMediaSensor3;
+      toSend +=   ",";
+      toSend +=   aceleracaoMediaSensor4;
+      toSend +=   ",";    
+      toSend +=   aceleracaoMediaSensor5;
+      toSend +=   ",";
+      toSend +=   aceleracaoMediaSensor6;
+      toSend +=   ",";   
+      toSend +=   aceleracaoMediaSensor7;
+      toSend +=   ",";
+      toSend +=   aceleracaoMediaSensor8;
+      toSend +=   ",";    
+      toSend +=   aceleracaoMediaSensor9;
+      toSend +=   ",";
+      //toSend +=   aceleracaoMediaSensor10;
+      //toSend +=   ",";   
+      
+      toSend += "&submit=Submit HTTP/1.1";//Completamos o metodo GET para nosso formulario.
   
-  if (client.connect("docs.google.com", 443) == 1)//Tenta se conectar ao servidor do Google docs na porta 443 (HTTPS)
-  {
-    String toSend = textFix;//Atribuimos a String auxiliar na nova String que sera enviada
-    toSend +=   acionamentoSensor1;
-    toSend +=   ",";
-    toSend +=   acionamentoSensor2;
-    toSend +=   ",";
-    toSend +=   acionamentoSensor3;
-    toSend +=   ",";
-    toSend +=   acionamentoSensor4;
-    toSend +=   ",";
-    toSend +=   acionamentoSensor5;
-    toSend +=   ",";
-    toSend +=   acionamentoSensor6;
-    toSend +=   ",";
-    toSend +=   acionamentoSensor7;
-    toSend +=   ",";
-    toSend +=   acionamentoSensor8;
-    toSend +=   ",";
-    toSend +=   acionamentoSensor9;
-    toSend +=   ",";
-    //toSend +=   acionamentoSensor10;
-    //toSend +=   ",";
-    toSend +=   tempoSensor1_ms;
-    toSend +=   ",";
-    toSend +=   tempoSensor2_ms;
-    toSend +=   ",";
-    toSend +=   tempoSensor3_ms;
-    toSend +=   ",";
-    toSend +=   tempoSensor4_ms;
-    toSend +=   ",";
-    toSend +=   tempoSensor5_ms;
-    toSend +=   ",";
-    toSend +=   tempoSensor6_ms;
-    toSend +=   ",";
-    toSend +=   tempoSensor7_ms;
-    toSend +=   ",";
-    toSend +=   tempoSensor8_ms;
-    toSend +=   ",";
-    toSend +=   tempoSensor9_ms;
-    toSend +=   ",";
-    //toSend +=   tempoSensor10_ms;
-    //toSend +=   ",";
-    toSend +=   velocidadeMediaSensor1;
-    toSend +=   ",";
-    toSend +=   velocidadeMediaSensor2;
-    toSend +=   ",";
-    toSend +=   velocidadeMediaSensor3;
-    toSend +=   ",";
-    toSend +=   velocidadeMediaSensor4;
-    toSend +=   ",";
-    toSend +=   velocidadeMediaSensor5;
-    toSend +=   ",";
-    toSend +=   velocidadeMediaSensor6;
-    toSend +=   ",";
-    toSend +=   velocidadeMediaSensor7;
-    toSend +=   ",";
-    toSend +=   velocidadeMediaSensor8;
-    toSend +=   ",";
-    toSend +=   velocidadeMediaSensor9;
-    toSend +=   ",";
-    //toSend +=   velocidadeMediaSensor1;
-    //toSend +=   ",";
-    toSend +=   aceleracaoMediaSensor1;
-    toSend +=   ",";
-    toSend +=   aceleracaoMediaSensor2;
-    toSend +=   ",";    
-    toSend +=   aceleracaoMediaSensor3;
-    toSend +=   ",";
-    toSend +=   aceleracaoMediaSensor4;
-    toSend +=   ",";    
-    toSend +=   aceleracaoMediaSensor5;
-    toSend +=   ",";
-    toSend +=   aceleracaoMediaSensor6;
-    toSend +=   ",";   
-    toSend +=   aceleracaoMediaSensor7;
-    toSend +=   ",";
-    toSend +=   aceleracaoMediaSensor8;
-    toSend +=   ",";    
-    toSend +=   aceleracaoMediaSensor9;
-    toSend +=   ",";
-    //toSend +=   aceleracaoMediaSensor10;
-    //toSend +=   ",";   
-    
-    toSend += "&submit=Submit HTTP/1.1";//Completamos o metodo GET para nosso formulario.
-
-    client.println(toSend);//Enviamos o GET ao servidor-
-    client.println("Host: docs.google.com");//-
-    client.println();//-
-    client.stop();//Encerramos a conexao com o servidor
-    Serial.println("Dados enviados.");//Mostra no monitor que foi enviado
+      client.println(toSend);//Enviamos o GET ao servidor-
+      client.println("Host: docs.google.com");//-
+      client.println();//-
+      client.stop();//Encerramos a conexao com o servidor
+      Serial.println("Dados enviados.");//Mostra no monitor que foi enviado
+      
+      acionaEnvioDeDados = false;
+    }
+    else
+    {
+      Serial.println("Erro ao se conectar");//Se nao for possivel conectar no servidor, ira avisar no monitor.
+    }
   }
-  else
-  {
-    Serial.println("Erro ao se conectar");//Se nao for possivel conectar no servidor, ira avisar no monitor.
-  }
+  delay(2000);
 }
