@@ -11,28 +11,37 @@
 
     <header>
 
-    <h1>DASHBOARD</h1>
-    <h2>Projeto integrador 4 semestre</h2>
-    <h3>Sensoriamento e analise de pista</h3>
+    <h1 class="tituloDePagina">DASHBOARD</h1>
+    <h2 class="subTituloDePagina">Sensoriamento e analise de pista</h2>
+
 
     </header>
 
     <main>
         <article id="sensoresAcionados">
-            <h2>Sensores acionados</h2>
+            <h2 class="subTituloDePagina">Sensores acionados</h2>
+
+            <section id="containerSinaleiros">
+                <div class="sinaleiros"><p>sensor 1</p></div>
+                <div class="sinaleiros">sensor 2</div>
+                <div class="sinaleiros">sensor 3</div>
+                <div class="sinaleiros">sensor 4</div>
+            </section>
             
         </article>
-        <article id="distanciaInstalacaoSensores">
-            <h2>Distancia de instalação dos sensores</h2>
-        </article>
+        <!-- <article id="distanciaInstalacaoSensores">
+            <h2 class="subTituloDePagina">Distancia de instalação dos sensores</h2>
+        </article> -->
         <article id="tempoAcionamentoSensores">
-            <h2>Tempo de acionamento dos sensores</h2>
+            <h2 class="subTituloDePagina">Tempo de acionamento dos sensores</h2>
         </article>
         <article id="graficosVelocidade">
-            <h2>Velocidade</h2>
+            <h2 class="subTituloDePagina">Velocidade</h2>
+            <div class="grafico"></div>
         </article>
         <article id="graficosAceleração">
-            <h2>aceleração</h2>
+            <h2 class="subTituloDePagina">aceleração</h2>
+            <div class="grafico"></div>
         </article>        
     </main>
     <script src="./script.js"></script>
