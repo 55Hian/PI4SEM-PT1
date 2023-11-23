@@ -18,13 +18,18 @@ const int sensor3 = 17;  // define o pino do sensor
 const int sensor4 = 18;  // define o pino do sensor
 const int sensor9 = 23; // define o pino do sensor
 
+#define pino_trigger 4
+#define pino_echo 5
+
+Ultrasonic ultrasonic(pino_trigger, pino_echo);
+
 const int led = 25  ; // define o pino do led
 
 boolean estadoSensor1;  //recebe leitura do pino do sensor
 boolean estadoSensor2;  //recebe leitura do pino do sensor
 boolean estadoSensor3;  //recebe leitura do pino do sensor
 boolean estadoSensor4;  //recebe leitura do pino do sensor
-
+boolean estadoSensor5;  //recebe leitura do pino do sensor
 
 
 
@@ -32,7 +37,7 @@ boolean liberasensor1 = false;  //Limitador de processo de leitura dos sensores
 boolean liberasensor2 = false;  //Limitador de processo de leitura dos sensores
 boolean liberasensor3 = false;  //Limitador de processo de leitura dos sensores
 boolean liberasensor4 = false;  //Limitador de processo de leitura dos sensores
-
+boolean liberasensor5 = false;  //Limitador de processo de leitura dos sensores
 
 
 boolean controleSensor1 = true; //limitador para inicio de processo
@@ -44,6 +49,7 @@ boolean acionamentoSensor1 = false; //Limitador do tipo cascata do processo de l
 boolean acionamentoSensor2 = false; //Limitador do tipo cascata do processo de leitura dos sensores
 boolean acionamentoSensor3 = false; //Limitador do tipo cascata do processo de leitura dos sensores
 boolean acionamentoSensor4 = false; //Limitador do tipo cascata do processo de leitura dos sensores
+boolean acionamentoSensor5 = false; //Limitador do tipo cascata do processo de leitura dos sensores
 
 boolean acionamentoSensor9 = false; //Limitador do tipo cascata do processo de leitura dos sensores
 
@@ -58,6 +64,7 @@ double millisTempoSensor1 = millis(); //armazena tempo de leitura do sensor
 double millisTempoSensor2 = millis(); //armazena tempo de leitura do sensor
 double millisTempoSensor3 = millis(); //armazena tempo de leitura do sensor
 double millisTempoSensor4 = millis(); //armazena tempo de leitura do sensor
+double millisTempoSensor5 = millis(); //armazena tempo de leitura do sensor
 double millisTempoSensor9 = millis(); //armazena tempo de leitura do sensor
 
 double millisIniciaProcesso = millis(); //Inicia função millis para comparador de processo
@@ -210,13 +217,36 @@ iniciarprocesso();
 
         acionamentoSensor4 = true;
         millisTempoSensor4 = millis();
-        liberaCalculos = true;
 
         Serial.println("Sensor 4");
         Serial.println(millisTempoSensor4);
         Serial.println("-----------------");
 
         liberasensor4 = false;
+
+      }
+    }
+
+       if (liberasensor5 == true) {
+        // Envia pulso para o disparar o sensor
+        float cmMsec, inMsec;
+        long microsec = ultrasonic.timing();
+        cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM);
+
+        if(cmMsec <= 12){
+          estadoSensor5 = 0;
+         }
+         if (estadoSensor5 == 0) { 
+          
+          acionamentoSensor5 = true;
+          millisTempoSensor5 = millis();
+          liberaCalculos = true;
+  
+          Serial.println("Sensor 5");
+          Serial.println(millisTempoSensor5);
+          Serial.println("-----------------");
+  
+          liberasensor5 = false;
 
       }
     }
