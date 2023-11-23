@@ -1,4 +1,3 @@
-
 void iniciarprocesso(){
 
   boolean estadoSensor9;  //recebe leitura do pino do sensor

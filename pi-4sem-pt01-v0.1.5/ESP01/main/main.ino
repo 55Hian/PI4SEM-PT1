@@ -19,12 +19,15 @@ const int sensor3 = 17;  // define o pino do sensor
 const int sensor4 = 18;  // define o pino do sensor
 const int sensor9 = 23; // define o pino do sensor
 
+
+
 #define pino_trigger 4
 #define pino_echo 5
 
 Ultrasonic ultrasonic(pino_trigger, pino_echo);
 
 const int led = 25  ; // define o pino do led
+const int pinoSinaleiroFim = 35; // define o pino do sinaleiro
 
 boolean estadoSensor1;  //recebe leitura do pino do sensor
 boolean estadoSensor2;  //recebe leitura do pino do sensor
@@ -116,8 +119,11 @@ void setup() {
   pinMode(sensor4, INPUT_PULLUP); //Define os pinos de sensores como entradas de sinal digital
   pinMode(sensor9, INPUT_PULLUP); //Define os pinos de sensores como entradas de sinal digital
   pinMode(led, OUTPUT); //Degine pino de indicador visual como saida
+  pinMode(pinoSinaleiroFim, OUTPUT); //Degine pino de indicador visual como saida
 
-
+  digitalWrite(led, LOW);
+  digitalWrite(pinoSinaleiroFim, LOW);
+  
   delay(2000);//Espera um tempo para se conectar no WiFi
 
   liberasensor1 = false;  //Limitador de processo de leitura dos sensores
@@ -248,7 +254,7 @@ iniciarprocesso();
           Serial.println("Sensor 5");
           Serial.println(millisTempoSensor5);
           Serial.println("-----------------");
-  
+          digitalWrite(pinoSinaleiroFim, HIGH);  // indicador visual de CHEGADA
           liberasensor5 = false;
 
       }
@@ -279,20 +285,23 @@ iniciarprocesso();
       liberasensor2 = false;  //Limitador de processo de leitura dos sensores
       liberasensor3 = false;  //Limitador de processo de leitura dos sensores
       liberasensor4 = false;  //Limitador de processo de leitura dos sensores
-
+      liberasensor5 = false;  //Limitador de processo de leitura dos sensores
+      
       acionamentoSensor1 = false; //Limitador do tipo cascata do processo de leitura dos sensores
       acionamentoSensor2 = false; //Limitador do tipo cascata do processo de leitura dos sensores
       acionamentoSensor3 = false; //Limitador do tipo cascata do processo de leitura dos sensores
       acionamentoSensor4 = false; //Limitador do tipo cascata do processo de leitura dos sensores
+      acionamentoSensor5 = false; //Limitador do tipo cascata do processo de leitura dos sensores
 
       inicioProcesso = false;
       verificaProcesso = true;
       zeraTempoInicioProcesso = true;
       controleSensor1 = true;
 
-
-      Serial.println("Reiniciando sistema de leitura leitura.");
-
+      digitalWrite(pinoSinaleiroFim, LOW);  // indicador visual de CHEGADA
+      digitalWrite(led, LOW);  // indicador visual de inicio de processo
+      Serial.println("Desligando sistema de leitura leitura.");
+      
       resetSistema = false;
     } 
 }
