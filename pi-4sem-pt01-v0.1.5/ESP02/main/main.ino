@@ -252,7 +252,7 @@ iniciarprocesso();
       acionamentoSensor3 = false; //Limitador do tipo cascata do processo de leitura dos sensores
       acionamentoSensor4 = false; //Limitador do tipo cascata do processo de leitura dos sensores
 
-      inicioProcesso = true;
+      inicioProcesso = false;
       verificaProcesso = true;
       zeraTempoInicioProcesso = true;
       controleSensor1 = true;
