@@ -8,7 +8,7 @@ const char* ssid     = "CACHORRO";     // login wifi
 const char* password = "hi12345678"; // senha wifi
 
 char *server = "script.google.com";  // Server URL
-char *GScriptId = "AKfycby2cm-VRPxicEOyf9rsbxiE4-b2fZLSc74fH7PCoZ5vfqsSUq9WlMGuyrx3xr9i1R9V"; //planilha teste
+char *GScriptId = "AKfycbyUE57iXdUKcIFGmmWDlvwG-M3Jp603cKawPlfvUnqpxCraYGqkGMNOFtfkaBv5K8QA"; //planilha teste
 
 WiFiClientSecure client;
 
@@ -120,8 +120,8 @@ void setup() {
   pinMode(led, OUTPUT); //Degine pino de indicador visual como saida
   pinMode(pinoSinaleiroFim, OUTPUT); //Degine pino de indicador visual como saida
 
-  digitalWrite(led, LOW);
-  digitalWrite(pinoSinaleiroFim, LOW);
+  digitalWrite(led, HIGH);
+  digitalWrite(pinoSinaleiroFim, HIGH);
   
   delay(2000);//Espera um tempo para se conectar no WiFi
 
@@ -150,7 +150,7 @@ iniciarprocesso();
 
   if (inicioProcesso == true) { // se o processo esta pronto para iniciar
     
-    digitalWrite(led, HIGH);  // indicador visual de inicio de processo
+    digitalWrite(led, LOW);  // indicador visual de inicio de processo
     
     if (controleSensor1 == true) { // se o sensor 1 esta liberado para atuar
       Serial.println("Sistema de leitura iniciado com sucesso!");
@@ -276,8 +276,7 @@ iniciarprocesso();
    
     if(resetSistema == true){
 
-      digitalWrite(led, LOW);  // indicador visual de inicio de processo
-      
+
       liberasensor1 = false;  //Limitador de processo de leitura dos sensores
       liberasensor2 = false;  //Limitador de processo de leitura dos sensores
       liberasensor3 = false;  //Limitador de processo de leitura dos sensores
@@ -295,8 +294,8 @@ iniciarprocesso();
       zeraTempoInicioProcesso = true;
       controleSensor1 = true;
 
-      digitalWrite(pinoSinaleiroFim, LOW);  // indicador visual de CHEGADA
-      digitalWrite(led, LOW);  // indicador visual de inicio de processo
+      digitalWrite(pinoSinaleiroFim, HIGH);  // indicador visual de CHEGADA
+      digitalWrite(led, HIGH);  // indicador visual de inicio de processo
       Serial.println("Desligando sistema de leitura leitura.");
 
       resetSistema = false;
