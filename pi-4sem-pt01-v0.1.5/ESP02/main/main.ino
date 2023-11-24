@@ -120,8 +120,8 @@ void setup() {
   pinMode(led, OUTPUT); //Degine pino de indicador visual como saida
   pinMode(pinoSinaleiroFim, OUTPUT); //Degine pino de indicador visual como saida
 
-  digitalWrite(led, HIGH);
-  digitalWrite(pinoSinaleiroFim, HIGH);
+  digitalWrite(led, LOW);
+  digitalWrite(pinoSinaleiroFim, LOW);
   
   delay(2000);//Espera um tempo para se conectar no WiFi
 
@@ -150,7 +150,7 @@ iniciarprocesso();
 
   if (inicioProcesso == true) { // se o processo esta pronto para iniciar
     
-    digitalWrite(led, LOW);  // indicador visual de inicio de processo
+    digitalWrite(led, HIGH);  // indicador visual de inicio de processo
     
     if (controleSensor1 == true) { // se o sensor 1 esta liberado para atuar
       Serial.println("Sistema de leitura iniciado com sucesso!");
@@ -294,8 +294,8 @@ iniciarprocesso();
       zeraTempoInicioProcesso = true;
       controleSensor1 = true;
 
-      digitalWrite(pinoSinaleiroFim, HIGH);  // indicador visual de CHEGADA
-      digitalWrite(led, HIGH);  // indicador visual de inicio de processo
+      digitalWrite(pinoSinaleiroFim, LOW);  // indicador visual de CHEGADA
+      digitalWrite(led, LOW);  // indicador visual de inicio de processo
       Serial.println("Desligando sistema de leitura leitura.");
 
       resetSistema = false;
