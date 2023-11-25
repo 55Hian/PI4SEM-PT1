@@ -184,7 +184,7 @@ iniciarprocesso();
 
       estadoSensor2 = digitalRead(sensor2); // realizar leitura do sensor
 
-      if (estadoSensor2 == 0) { // se o sensor envio sinal
+      if (estadoSensor2 == 1) { // se o sensor envio sinal
 
         acionamentoSensor2 = true;  // variavel que será enviada para nuvem, sensor foi acionado
         millisTempoSensor2 = millis();  // armazenar tempo em que o sensor foi acionado
@@ -241,8 +241,9 @@ iniciarprocesso();
         float cmMsec, inMsec;
         long microsec = ultrasonic.timing();
         cmMsec = ultrasonic.convert(microsec, Ultrasonic::CM);
+        Serial.println(cmMsec);
 
-        if(cmMsec <= 12){
+        if(cmMsec <= 17){
           estadoSensor5 = 0;
          }
          if (estadoSensor5 == 0) { 
